@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <title>Нова сторінка</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 250px;
+            background-color: #333;
+            color: #fff;
+            height: 100vh;
+            padding: 20px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            overflow-y: auto;
+        }
+
+        .sidebar h2 {
+            text-align: left;
+            color: #fff;
+        }
+
+        .sidebar a, .sidebar button {
+            color: #fff;
+            text-decoration: none;
+            padding: 10px 0;
+            width: 100%;
+            display: block;
+            margin: 5px 0;
+            background: none;
+            border: none;
+            text-align: left;
+            cursor: pointer;
+            outline: none;
+        }
+
+        .sidebar a:hover, .sidebar button:hover {
+            background-color: #575757;
+            border-radius: 5px;
+            padding-left: 10px;
+        }
+
+        .submenu {
+            display: none;
+            padding-left: 20px;
+        }
+
+        .submenu a {
+            padding: 5px 0;
+        }
+
+        .content {
+            flex-grow: 1;
+            padding: 20px;
+            box-sizing: border-box;
+            margin-left: 250px;
+        }
+
+        .header {
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .logout-button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 3px;
+            background-color: #007bff;
+            color: #fff;
+            cursor: pointer;
+            outline: none;
+            text-align: left;
+        }
+
+        .logout-button:hover {
+            background-color: #0056b3;
+            border-radius: 5px;
+            padding-left: 10px;
+            color: #ffffff;
+        }
+
+        .logout-container {
+            margin-top: auto;
+        }
+        .product-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            max-width: calc(100% - 250px); /* враховуємо ширину бокового меню */
+            width: calc(100% - 250px); /* зробимо контейнер ширшим */
+            justify-content: space-between; /* Додав цей рядок для рівномірного розподілу простору */
+            width: 1800px;
+        }
+        
+        .product {
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 15px;
+            width: calc(100% - 10px); /* зменшив відступи, щоб вмістити в 3 колонки */
+        }
+        
+        .product h3 {
+            margin-top: 0;
+        }
+        
+        .product p {
+            margin-bottom: 0;
+        }
+        
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <div>
+            <h2>Меню</h2>
+            <button onclick="toggleSubmenu('statisticsSubmenu')">Статистика</button>
+            <div id="statisticsSubmenu" class="submenu">
+                <a href="#" onclick="showSection('sales')">Продажі</a>
+                <a href="#" onclick="showSection('employees')">Працівники</a>
+                <a href="#" onclick="showSection('products')">Товари</a>
+            </div>
+            <button onclick="toggleSubmenu('inventorySubmenu')">Склад</button>
+            <div id="inventorySubmenu" class="submenu">
+                <a href="/leftovers.html" onclick="showSection('stock')">Залишки</a>
+                <a href="/supply.html" onclick="showSection('supply')">Постачання</a>
+                <a href="#" onclick="showSection('writeOff')">Списання</a>
+            </div>
+            <button onclick="toggleSubmenu('menuSubmenu')">Меню</button>
+            <div id="menuSubmenu" class="submenu">
+                <a href="/products.html" onclick="showSection('items')">Товари</a>
+                <a href="#" onclick="showSection('techCards')">Тех Карти</a>
+            </div>
+            <button onclick="toggleSubmenu('financesSubmenu')">Фінанси</button>
+            <div id="financesSubmenu" class="submenu">
+                <a href="#" onclick="showSection('transactions')">Транзакції</a>
+                <a href="#" onclick="showSection('salary')">Зарплата</a>
+            </div>
+        </div>
+        <div class="logout-container">
+            <button class="logout-button" onclick="logout()">Вийти</button>
+        </div>
+    </div>
+
+<div class="content">
+    <div class="header">
+        <h1>Залишки</h1>
+    </div>
+    <div id="sales" class="section" style="display:none;">
+        <div class="product-container">
+            <!-- Контейнер для продукту 1 -->
+            <div class="product">
+                <h3>Aperol</h3>
+                <p>Вага: 2000 г</p>
+                <p>Ціна: 1060 UAH</p>
+            </div>
+            <!-- Контейнер для продукту 2 -->
+            <div class="product">
+                <h3>Айсберг</h3>
+                <p>Вага: 2 кг</p>
+                <p>Ціна: 1420 UAH</p>
+            </div>
+            <!-- Контейнер для продукту 3 -->
+            <div class="product">
+                <h3>Курка</h3>
+                <p>Вага: 6 кг г</p>
+                <p>Ціна: 807 UAH</p>
+            </div>
+            <!-- Контейнер для продукту 4 -->
+            <div class="product">
+                <h3>Норі</h3>
+                <p>Вага: 0.4 кг</p>
+                <p>Ціна: 755 UAH</p>
+            </div>
+            <!-- Контейнер для продукту 5 -->
+            <div class="product">
+                <h3>Сир</h3>
+                <p>Вага: 2000 г</p>
+                <p>Ціна: 1060 UAH</p>
+            </div>
+            <div class="product">
+                <h3>Кунжут</h3>
+                <p>Вага: 1 кг</p>
+                <p>Ціна: 480 UAH</p>
+            </div>
+            <div class="product">
+                <h3>Coca-Cola</h3>
+                <p>Вага: 9 л</p>
+                <p>Ціна: 275 UAH</p>
+            </div>
+            <div class="product">
+                <h3>Моршинська</h3>
+                <p>Вага: 12 л</p>
+                <p>Ціна: 264 UAH</p>
+            </div>
+            <div class="product">
+                <h3>Морозиво "Лімо" </h3>
+                <p>Вага: 2 кг</p>
+                <p>Ціна: 1340 UAH</p>
+            </div>
+        </div>
+    </div>
+
+<script>
+    function showSection(sectionId) {
+        var sections = document.getElementsByClassName('section');
+        for (var i = 0; i < sections.length; i++) {
+            sections[i].style.display = 'none';
+        }
+        document.getElementById(sectionId).style.display = 'block';
+    }
+
+    function toggleSubmenu(submenuId) {
+        var submenu = document.getElementById(submenuId);
+        if (submenu.style.display === 'none' || submenu.style.display === '') {
+            submenu.style.display = 'block';
+        } else {
+            submenu.style.display = 'none';
+        }
+    }
+
+    function logout() {
+        window.location.href = '/';
+    }
+    
+    window.onload = function() {
+        showSection('sales');
+    };
+</script>
+
+</body>
+</html>

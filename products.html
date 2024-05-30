@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <title>Список товарів</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 250px;
+            background-color: #333;
+            color: #fff;
+            height: 100vh;
+            padding: 20px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            overflow-y: auto;
+        }
+
+        .sidebar h2 {
+            text-align: left;
+            color: #fff;
+        }
+
+        .sidebar a, .sidebar button {
+            color: #fff;
+            text-decoration: none;
+            padding: 10px 0;
+            width: 100%;
+            display: block;
+            margin: 5px 0;
+            background: none;
+            border: none;
+            text-align: left;
+            cursor: pointer;
+            outline: none;
+        }
+
+        .sidebar a:hover, .sidebar button:hover {
+            background-color: #575757;
+            border-radius: 5px;
+            padding-left: 10px;
+        }
+
+        .submenu {
+            display: none;
+            padding-left: 20px;
+        }
+
+        .submenu a {
+            padding: 5px 0;
+        }
+
+        .content {
+            flex-grow: 1;
+            padding: 20px;
+            box-sizing: border-box;
+            margin-left: 250px;
+        }
+
+        #products {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .product-card {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: calc(33.333% - 20px);
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .product-card img {
+            max-width: 100%;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .product-card h3 {
+            margin-top: 0;
+            text-align: center;
+        }
+
+        .product-card p {
+            margin: 5px 0;
+            text-align: center;
+        }
+
+        .product-card .price {
+            font-size: 18px;
+            font-weight: bold;
+            color: #28a745;
+        }
+
+        button {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            background-color: #6cee20;
+            color: #fffdfc;
+            cursor: pointer;
+            outline: none;
+            font-size: 14px;
+        }
+
+        button:hover {
+            background-color: #70a5df;
+        }
+    </style>
+</head>
+<body>
+
+<div class="sidebar">
+    <div>
+        <h2>Меню</h2>
+        <button onclick="toggleSubmenu('statisticsSubmenu')">Статистика</button>
+        <div id="statisticsSubmenu" class="submenu">
+            <a href="#" onclick="showSection('sales')">Продажі</a>
+            <a href="#" onclick="showSection('employees')">Працівники</a>
+            <a href="#" onclick="showSection('products')">Товари</a>
+        </div>
+        <button onclick="toggleSubmenu('inventorySubmenu')">Склад</button>
+        <div id="inventorySubmenu" class="submenu">
+            <a href="#" onclick="showSection('stock')">Залишки</a>
+            <a href="#" onclick="showSection('supply')">Постачання</a>
+            <a href="#" onclick="showSection('writeOff')">Списання</a>
+        </div>
+        <button onclick="toggleSubmenu('menuSubmenu')">Меню</button>
+        <div id="menuSubmenu" class="submenu">
+            <a href="#" onclick="showSection('items')">Товари</a>
+            <a href="#" onclick="showSection('techCards')">Тех Карти</a>
+        </div>
+        <button onclick="toggleSubmenu('financesSubmenu')">Фінанси</button>
+        <div id="financesSubmenu" class="submenu">
+            <a href="#" onclick="showSection('transactions')">Транзакції</a>
+            <a href="#" onclick="showSection('salary')">Зарплата</a>
+        </div>
+    </div>
+    <div class="logout-container">
+        <button class="logout-button" onclick="logout()">Вийти</button>
+    </div>
+</div>
+
+<div class="content">
+    <h2>Список товарів</h2>
+    <div id="products" class="section"></div>
+    <button onclick="redirectToProductForm()">Додати товар</button>
+</div>
+
+<script>
+    function showSection(sectionId) {
+        var sections = document.getElementsByClassName('section');
+        for (var i = 0; i < sections.length; i++) {
+            sections[i].style.display = 'none';
+        }
+        document.getElementById(sectionId).style.display = 'block';
+    }
+
+    function toggleSubmenu(submenuId) {
+        var submenu = document.getElementById(submenuId);
+        if (submenu.style.display === 'none' || submenu.style.display === '') {
+            submenu.style.display = 'block';
+        } else {
+            submenu.style.display = 'none';
+        }
+    }
+
+    function logout() {
+        window.location.href = '/';
+    }
+
+    function displayProducts() {
+        fetch('/products')
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                }
+                throw new Error('Network response was not ok.');
+            })
+            .then(data => {
+                const productContainer = document.getElementById('products');
+                productContainer.innerHTML = ''; // Очистимо контейнер перед відображенням
+                data.forEach(product => {
+                    const div = document.createElement('div');
+                    div.classList.add('product-card');
+                    div.innerHTML = `
+                        <img src="${product.imageUrl}">
+                        <h3>${product.name}</h3>
+                        <p class="price">Собівартість: ${product.cost} UAH</p>
+                        <p class="price">Ціна: ${product.price} UAH</p>
+                        <p>Вага: ${product.weight} КГ</p>
+                        <p>Націнка: ${product.price - product.cost} UAH</p>
+                    `;
+                    productContainer.appendChild(div);
+                });
+            })
+            .catch(error => console.error('Помилка:', error));
+    }
+
+    window.onload = function() {
+        showSection('products');
+        displayProducts(); // Відображення списку товарів
+    };
+
+    function redirectToProductForm() {
+        // Перенаправлення на сторінку з формою для додавання товару
+        window.location.href = 'add-product.html';
+    }
+</script>
+
+</body>
+</html>

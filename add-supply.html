@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Додати товар</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: #333;
+            color: #fff;
+            height: 100vh;
+            padding: 20px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            overflow-y: auto;
+        }
+
+        .sidebar h2 {
+            text-align: left;
+            color: #fff;
+        }
+
+        .sidebar a, .sidebar button {
+            color: #fff;
+            text-decoration: none;
+            padding: 10px 0;
+            width: 100%;
+            display: block;
+            margin: 5px 0;
+            background: none;
+            border: none;
+            text-align: left;
+            cursor: pointer;
+            outline: none;
+        }
+
+        .sidebar a:hover, .sidebar button:hover {
+            background-color: #575757;
+            border-radius: 5px;
+            padding-left: 10px;
+        }
+
+        .submenu {
+            display: none;
+            padding-left: 20px;
+        }
+
+        .submenu a {
+            padding: 5px 0;
+        }
+
+        .content {
+            padding: 20px;
+            box-sizing: border-box;
+            width: calc(100% - 250px);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .form-container {
+            background-color: #fff;
+            border-radius: 5px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: auto;
+            margin: 0 auto;
+        }
+
+        .form-container label {
+            font-weight: bold;
+        }
+
+        .form-container input[type="text"],
+        .form-container textarea {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0 20px 0;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .form-container input[type="submit"] {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            padding: 10px 20px;
+            font-size: 16px;
+        }
+
+        .form-container input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+
+        .back-button {
+            background-color: #ccc;
+            color: #000;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            padding: 15px 30px;
+            font-size: 16px;
+            text-decoration: none;
+            margin-right: 10px;
+            margin-left: 55px;
+            display: inline-block;
+            width: 30%;
+        }
+
+        .back-button:hover {
+            background-color: #bbb;
+        }
+
+        .form-container label {
+            font-weight: bold;
+        }
+
+        .form-container input[type="text"],
+        .form-container textarea {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0 20px 0;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .form-container input[type="number"] {
+            width: calc(50% - 5px);
+            padding: 8px;
+            margin: 5px 0 20px 0;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .form-container textarea {
+            height: 100px;
+        }
+
+        .form-container input[type="datetime-local"] {
+            width: calc(50% - 5px);
+            padding: 8px;
+            margin: 5px 0 20px 0;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .form-container #productsList .product-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .form-container #productsList .product-item input[type="text"],
+        .form-container #productsList .product-item input[type="number"] {
+            width: calc(45% - 5px);
+            padding: 8px;
+            margin: 5px 0 20px 0;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .form-container #productsList .product-item button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            padding: 8px 15px;
+            font-size: 14px;
+        }
+
+        .form-container #productsList .product-item button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+<div class="sidebar">
+    <div>
+        <h2>Меню</h2>
+        <button onclick="toggleSubmenu('statisticsSubmenu')">Статистика</button>
+        <div id="statisticsSubmenu" class="submenu">
+            <a href="#" onclick="showSection('sales')">Продажі</a>
+            <a href="#" onclick="showSection('employees')">Працівники</a>
+            <a href="#" onclick="showSection('products')">Товари</a>
+        </div>
+        <button onclick="toggleSubmenu('inventorySubmenu')">Склад</button>
+        <div id="inventorySubmenu" class="submenu">
+            <a href="#" onclick="showSection('stock')">Залишки</a>
+            <a href="#" onclick="showSection('supply')">Постачання</a>
+            <a href="#" onclick="showSection('writeOff')">Списання</a>
+        </div>
+        <button onclick="toggleSubmenu('menuSubmenu')">Меню</button>
+        <div id="menuSubmenu" class="submenu">
+            <a href="#" onclick="showSection('items')">Товари</a>
+            <a href="#" onclick="showSection('techCards')">Тех Карти</a>
+        </div>
+        <button onclick="toggleSubmenu('financesSubmenu')">Фінанси</button>
+        <div id="financesSubmenu" class="submenu">
+            <a href="#" onclick="showSection('transactions')">Транзакції</a>
+            <a href="#" onclick="showSection('salary')">Зарплата</a>
+        </div>
+    </div>
+    <div class="logout-container">
+        <button class="logout-button" onclick="logout()">Вийти</button>
+    </div>
+</div>
+
+<div class="content">
+    <div class="header">
+        <h1>Додати постачання</h1>
+    </div>
+
+    <div class="form-container">
+        <form id="addSupplyForm">
+            <label for="supplyDate">Дата та час постачання:</label><br>
+            <input type="datetime-local" id="supplyDate" name="supplyDate"><br><br>
+            <label for="supplier">Постачальник:</label><br>
+            <input type="text" id="supplier" name="supplier"><br><br>
+            <label for="payment">Оплата:</label><br>
+            <input type="text" id="payment" name="payment"><br><br>
+            <label for="comment">Коментар:</label><br>
+            <textarea id="comment" name="comment"></textarea><br><br>
+            <label for="products">Список продуктів:</label><br>
+            <div id="productsList">
+                <div class="product-item">
+                    <input type="text" name="productName[]" placeholder="Назва продукту">
+                    <input type="number" name="productQuantity[]" placeholder="Кількість">
+                    <button type="button" onclick="addProductField()">Додати продукт</button>
+                </div>
+            </div>
+            <input type="submit" value="Додати">
+        </form>
+    </div>
+    <a href="/dashboard.html" class="back-button">Повернутись до списку постачань</a>
+</div>
+
+<script>
+    function toggleSubmenu(submenuId) {
+        var submenu = document.getElementById(submenuId);
+        if (submenu.style.display === 'block') {
+            submenu.style.display = 'none';
+        } else {
+            submenu.style.display = 'block';
+        }
+    }
+
+    function showSection(sectionId) {
+        var sections = document.querySelectorAll('.content > div');
+        sections.forEach(function(section) {
+            section.style.display = 'none';
+        });
+        var selectedSection = document.getElementById(sectionId);
+        selectedSection.style.display = 'block';
+    }
+
+    function logout() {
+        alert('Ви вийшли з системи');
+    }
+
+    function addProductField() {
+        var productsList = document.getElementById('productsList');
+        var productItem = document.createElement('div');
+        productItem.classList.add('product-item');
+        productItem.innerHTML = `
+            <input type="text" name="productName[]" placeholder="Назва продукту">
+            <input type="number" name="productQuantity[]" placeholder="Кількість">
+        `;
+        productsList.appendChild(productItem);
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('addSupplyForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+        
+            const supplyDate = document.getElementById('supplyDate').value;
+            const supplier = document.getElementById('supplier').value;
+            const payment = document.getElementById('payment').value;
+            const comment = document.getElementById('comment').value;
+            
+            // Отримання списку продуктів з форми HTML
+            const products = [];
+            const productItems = document.querySelectorAll('#productsList .product-item');
+            productItems.forEach(item => {
+                const productName = item.querySelector('input[name="productName[]"]').value;
+                const productQuantity = item.querySelector('input[name="productQuantity[]"]').value;
+                products.push({ name: productName, quantity: productQuantity });
+            });
+            
+            try {
+                const response = await fetch('/add-supply', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        supplyDate,
+                        supplier,
+                        payment,
+                        comment,
+                        products  // Включення інформації про продукти в тіло запиту
+                    })
+                });
+        
+                if (response.ok) {
+                    alert('Постачання успішно додано!');
+                    // Очистка форми після успішного додавання
+                    document.getElementById('supplyDate').value = '';
+                    document.getElementById('supplier').value = '';
+                    document.getElementById('payment').value = '';
+                    document.getElementById('comment').value = '';
+                    // Очистка списку продуктів
+                    document.getElementById('productsList').innerHTML = `
+                        <div class="product-item">
+                            <input type="text" name="productName[]" placeholder="Назва продукту">
+                            <input type="number" name="productQuantity[]" placeholder="Кількість">
+                            <button type="button" onclick="addProductField()">Додати продукт</button>
+                        </div>
+                    `;
+                } else {
+                    alert('Помилка при додаванні постачання');
+                }
+            } catch (error) {
+                console.error('Помилка:', error);
+                alert('Помилка при відправці запиту на сервер');
+            }
+        });
+    });
+</script>
+
+</body>
+</html>

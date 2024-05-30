@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <title>Панель інструментів</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 250px;
+            background-color: #333;
+            color: #fff;
+            height: 100vh;
+            padding: 20px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            overflow-y: auto;
+        }
+
+        .sidebar h2 {
+            text-align: left;
+            color: #fff;
+        }
+
+        .sidebar a, .sidebar button {
+            color: #fff;
+            text-decoration: none;
+            padding: 10px 0;
+            width: 100%;
+            display: block;
+            margin: 5px 0;
+            background: none;
+            border: none;
+            text-align: left;
+            cursor: pointer;
+            outline: none;
+        }
+
+        .sidebar a:hover, .sidebar button:hover {
+            background-color: #575757;
+            border-radius: 5px;
+            padding-left: 10px;
+        }
+
+        .submenu {
+            display: none;
+            padding-left: 20px;
+        }
+
+        .submenu a {
+            padding: 5px 0;
+        }
+
+        .content {
+            flex-grow: 1;
+            padding: 20px;
+            box-sizing: border-box;
+            margin-left: 250px;
+        }
+
+        .header {
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .logout-button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 3px;
+            background-color: #007bff;
+            color: #fff;
+            cursor: pointer;
+            outline: none;
+            text-align: left;
+        }
+
+        .logout-button:hover {
+            background-color: #0056b3;
+            border-radius: 5px;
+            padding-left: 10px;
+            color: #ffffff;
+        }
+
+        .logout-container {
+            margin-top: auto;
+        }
+        .search-box {
+            position: relative;
+        }
+        
+        .search-input {
+            padding: 8px 25px 8px 10px;
+            border: 1px solid #858282;
+            border-radius: 5px;
+            font-size: 14px;
+            width: 200px;
+            margin-right: 10px;
+        }
+        
+        .search-icon {
+            position: absolute;
+            top: 50%;
+            right: 35px;
+            transform: translateY(-50%);
+            color: #555;
+        }
+        
+        .add-button {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            background-color: #6cee20;
+            color: #fffdfc;
+            cursor: pointer;
+            outline: none;
+            font-size: 14px;
+        }
+        
+        .add-button:hover {
+            background-color: #70a5df;
+        }
+        
+        #techCardDetails {
+            display: none;
+        }
+        
+        #techCardList {
+            list-style-type: none;
+            padding: 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* Розташовуємо технічні картки у сітці з автоматичним розташуванням */
+            grid-gap: 20px; /* Відступ між технічними картками */
+        }
+        #techCardDetails > div {
+            display: flex;
+            flex-wrap: wrap;
+        }
+        
+        #techCardDetails > div > div {
+            flex: 1;
+        }
+        
+        .tech-card-container {
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        /* Стилі для висувного списку з повною інформацією про технічну картку */
+        .tech-card-details {
+            display: none;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            background-color: #f9f9f9;
+        }
+
+        .tech-card-container:hover {
+            transform: translateY(-5px); /* Зменшуємо тінь при наведенні */
+        }
+        
+        .tech-card-details-container {
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            background-color: #f9f9f9;
+            display: none;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+        }
+        
+        .tech-card-name {
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            font-size: 18px;
+        }
+        
+        .tech-card-name:hover {
+            background-color: #f0f0f0;
+        }
+
+        #addItemButton {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            background-color: #6cee20;
+            color: #fffdfc;
+            cursor: pointer;
+            outline: none;
+            font-size: 14px;
+            transition: background-color 0.3s ease;
+        }
+
+        #addItemButton:hover {
+            background-color: #70a5df;
+        }
+    </style>
+</head>
+<body>
+
+<div class="sidebar">
+    <div>
+        <h2>Меню</h2>
+        <button onclick="toggleSubmenu('statisticsSubmenu')">Статистика</button>
+        <div id="statisticsSubmenu" class="submenu">
+            <a href="/sales.html" onclick="showSection('sales')">Продажі</a>
+            <a href="#" onclick="showSection('employees')">Працівники</a>
+            <a href="#" onclick="showSection('products')">Товари</a>
+        </div>
+        <button onclick="toggleSubmenu('inventorySubmenu')">Склад</button>
+        <div id="inventorySubmenu" class="submenu">
+            <a href="/leftovers.html" onclick="showSection('stock')">Залишки</a>
+            <a href="/supply.html" onclick="showSection('supply')">Постачання</a>
+            <a href="/rest.html" onclick="showSection('writeOff')">Списання</a>
+        </div>
+        <button onclick="toggleSubmenu('menuSubmenu')">Меню</button>
+        <div id="menuSubmenu" class="submenu">
+            <a href="/products.html" onclick="showSection('items')">Товари</a>
+            <a href="#" onclick="showSection('techCards')">Тех Карти</a>
+        </div>
+        <button onclick="toggleSubmenu('financesSubmenu')">Фінанси</button>
+        <div id="financesSubmenu" class="submenu">
+            <a href="/transaction.html" onclick="showSection('transactions')">Транзакції</a>
+            <a href="/salary.html" onclick="showSection('salary')">Зарплата</a>
+        </div>
+    </div>
+    <div class="logout-container">
+        <button class="logout-button" onclick="logout()">Вийти</button>
+    </div>
+</div>
+
+<div class="content">
+    <div class="header">
+        <h1>AndreEnterprise</h1>
+    </div>
+    <div id="sales" class="section" style="display:none;">
+        <h2>Продажі</h2>
+        <p>Тут буде відображатися інформація про продажі вашого підприємства.</p>
+    </div>
+    <div id="employees" class="section" style="display:none;">
+        <h2>Працівники</h2>
+        <p>Тут буде відображатися інформація про працівників вашого підприємства.</p>
+    </div>
+    <div id="products" class="section" style="display:none;">
+        <h2>Товари</h2>
+        <p>Тут буде відображатися інформація про товари вашого підприємства.</p>
+    </div>
+    <div id="stock" class="section" style="display:none;">
+        <h2>Залишки</h2>
+        <p>Тут буде відображатися інформація про залишки на складі.</p>
+    </div>
+    <div id="supply" class="section" style="display:none;">
+        <h2>Постачання</h2>
+        <p>Тут буде відображатися інформація про постачання.</p>
+    </div>
+    <div id="writeOff" class="section" style="display:none;">
+        <h2>Списання</h2>
+        <p>Тут буде відображатися інформація про списання товарів.</p>
+    </div>
+    <div id="items" class="section" style="display:none;">
+        <h2>Товари</h2>
+        <p>Тут буде відображатися інформація про товари вашого підприємства.</p>
+        <button id="addItemButton" onclick="redirectToProductForm()">Додати товар</button>
+    </div>
+    <div id="techCards" class="section" style="display:none;">
+        <h2 style="display: flex; justify-content: space-between; align-items: center;">Технічні картки
+            <span>
+                <input type="text" id="techCardFilterInput" class="search-input" oninput="filterTechCards()" placeholder="Пошук за назвою">
+            </span>
+            <span>
+                <button class="add-button" onclick="addTechCard()">Додати</button>
+            </span>
+        </h2>
+        <!-- Контейнер для відображення технічних карток -->
+        <ul id="techCardList"></ul>
+        <div id="techCardDetailsContainer" class="tech-card-details-container"></div>
+        <!-- Деталі технічної картки -->
+        <div id="techCardDetails">
+            <div>
+                <strong>Назва:</strong> <span id="techCardName"></span><br>
+                <strong>Опис:</strong> <span id="techCardDescription"></span><br>
+                <strong>Інгредієнт:</strong> <span id="techCardIngredient"></span><br>
+            </div>
+            <div>
+                <strong>Ціна за кг:</strong> <span id="techCardPricePerKg"></span><br>
+                <strong>Вага інгредієнта:</strong> <span id="techCardIngredientWeight"></span><br>
+                <strong>Націнка:</strong> <span id="techCardMarkup"></span><br>
+            </div>
+        </div>
+    </div>
+    <div id="transactions" class="section" style="display:none;">
+        <h2>Транзакції</h2>
+        <p>Тут буде відображатися інформація про транзакції.</p>
+    </div>
+    <div id="salary" class="section" style="display:none;">
+        <h2>Зарплата</h2>
+        <p>Тут буде відображатися інформація про зарплати працівників.</p>
+    </div>
+</div>
+
+<script>
+    function showSection(sectionId) {
+        var sections = document.getElementsByClassName('section');
+        for (var i = 0; i < sections.length; i++) {
+            sections[i].style.display = 'none';
+        }
+        document.getElementById(sectionId).style.display = 'block';
+    }
+
+    function toggleSubmenu(submenuId) {
+        var submenu = document.getElementById(submenuId);
+        if (submenu.style.display === 'none' || submenu.style.display === '') {
+            submenu.style.display = 'block';
+        } else {
+            submenu.style.display = 'none';
+        }
+    }
+
+    function logout() {
+        window.location.href = '/';
+    }
+
+    function addTechCard() {
+        fetch('/add-tech-card.html', {
+            method: 'GET'
+        })
+        .then(response => {
+            if (response.ok) {
+                return response.text();
+            }
+            throw new Error('Network response was not ok.');
+        })
+        .then(html => {
+            document.querySelector('.content').innerHTML = html;
+            const addTechCardForm = document.getElementById('addTechCardForm');
+            addTechCardForm.addEventListener('submit', async function(event) {
+                event.preventDefault();
+                const formData = new FormData(addTechCardForm);
+                const formObject = {};
+                formData.forEach((value, key) => {
+                    formObject[key] = value;
+                });
+                try {
+                    const response = await fetch('/add-tech-card', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(formObject)
+                    });
+                    if (response.ok) {
+                        alert('Технічна картка успішно додана!');
+                        addTechCardForm.reset();
+                    } else {
+                        alert('Помилка при додаванні технічної картки');
+                    }
+                } catch (error) {
+                    console.error('Помилка:', error);
+                    alert('Помилка при відправці запиту на сервер');
+                }
+            });
+        })
+        .catch(error => console.error('Помилка при завантаженні сторінки:', error));
+    }
+
+    function displayTechCards() {
+        fetch('/tech-cards')
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                }
+                throw new Error('Network response was not ok.');
+            })
+            .then(data => {
+                const techCardList = document.getElementById('techCardList');
+                techCardList.innerHTML = '';
+                data.forEach(techCard => {
+                    const li = document.createElement('li');
+                    li.textContent = `${techCard.techCardName} `;
+                    li.style.padding = '10px';
+                    li.style.borderRadius = '5px';
+                    li.style.marginBottom = '20px';
+                    li.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.1)';
+                    li.style.backgroundColor = '#fff';
+                    // Додайте обробник подій для відображення деталей технічної картки
+                    li.addEventListener('click', () => {
+                        showTechCardDetails(techCard);
+                    });
+                    techCardList.appendChild(li);
+                });
+            })
+            .catch(error => console.error('Помилка:', error));
+    }
+    
+
+    // Функція для відображення деталей технічної картки
+    function showTechCardDetails(techCard) {
+        const techCardDetailsContainer = document.getElementById('techCardDetailsContainer');
+        techCardDetailsContainer.innerHTML = `
+            <div><strong>Назва:</strong> ${techCard.techCardName}</div>
+            <div><strong>Ціна за кг:</strong> ${techCard.pricePerKg}</div>
+            <div><strong>Опис:</strong> ${techCard.techCardDescription}</div>
+            <div><strong>Інгредієнт:</strong> ${techCard.ingredient}</div>
+            <div><strong>Вага інгредієнта:</strong> ${techCard.ingredientWeight}</div>
+            <div><strong>Націнка:</strong> ${techCard.markup}</div>
+        `;
+        techCardDetailsContainer.style.display = 'block';
+    }
+    
+    function filterTechCards() {
+        const filterValue = document.getElementById('techCardFilterInput').value.toUpperCase();
+        const techCards = document.getElementById('techCardList').getElementsByTagName('li');
+        for (let i = 0; i < techCards.length; i++) {
+            const cardName = techCards[i].textContent.toUpperCase();
+            if (cardName.indexOf(filterValue) > -1) {
+                techCards[i].style.display = '';
+            } else {
+                techCards[i].style.display = 'none';
+            }
+        }
+    }
+    
+    function redirectToProductForm() {
+        // Перенаправлення на сторінку з формою для додавання продукту
+        window.location.href = 'add-product.html';
+    }
+    window.onload = function() {
+        showSection('sales');
+        displayTechCards();
+    };
+</script>
+
+</body>
+</html>

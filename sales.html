@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Статистика</title>
+    <!-- Підключення Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 250px;
+            background-color: #333;
+            color: #fff;
+            height: 100vh;
+            padding: 20px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            overflow-y: auto;
+        }
+
+        .sidebar h2 {
+            text-align: left;
+            color: #fff;
+        }
+
+        .sidebar a, .sidebar button {
+            color: #fff;
+            text-decoration: none;
+            padding: 10px 0;
+            width: 100%;
+            display: block;
+            margin: 5px 0;
+            background: none;
+            border: none;
+            text-align: left;
+            cursor: pointer;
+            outline: none;
+        }
+
+        .sidebar a:hover, .sidebar button:hover {
+            background-color: #575757;
+            border-radius: 5px;
+            padding-left: 10px;
+        }
+
+        /* Central content */
+        .content {
+            margin-left: 250px;
+            padding: 20px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Canvas styles */
+        canvas {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="sidebar">
+    <div>
+        <h2>Меню</h2>
+        <button onclick="toggleSubmenu('statisticsSubmenu')">Статистика</button>
+        <div id="statisticsSubmenu" class="submenu">
+            <a href="#" onclick="showSection('sales')">Продажі</a>
+        </div>
+        <button onclick="toggleSubmenu('inventorySubmenu')">Склад</button>
+        <div id="inventorySubmenu" class="submenu">
+            <a href="/leftovers.html" onclick="showSection('stock')">Залишки</a>
+            <a href="/supply.html" onclick="showSection('supply')">Постачання</a>
+            <a href="/rest.html" onclick="showSection('writeOff')">Списання</a>
+        </div>
+        <button onclick="toggleSubmenu('menuSubmenu')">Меню</button>
+        <div id="menuSubmenu" class="submenu">
+            <a href="/products.html" onclick="showSection('items')">Товари</a>
+            <a href="#" onclick="showSection('techCards')">Тех Карти</a>
+        </div>
+        <button onclick="toggleSubmenu('financesSubmenu')">Фінанси</button>
+        <div id="financesSubmenu" class="submenu">
+            <a href="/transaction.html" onclick="showSection('transactions')">Транзакції</a>
+            <a href="/salary.html" onclick="showSection('salary')">Зарплата</a>
+        </div>
+    </div>
+    <div class="logout-container">
+        <button class="logout-button" onclick="logout()">Вийти</button>
+    </div>
+</div>
+
+<div class="content">
+    <!-- HTML-контейнери для графіків та діаграм -->
+    <canvas id="incomeChart" width="400" height="200"></canvas>
+    <canvas id="transactionsChart" width="400" height="200"></canvas>
+    <canvas id="incomeExpenseChart" width="400" height="200"></canvas>
+    <canvas id="paymentMethodsChart" width="400" height="200"></canvas>
+</div>
+
+<script>
+    // Дані для графіка доходів за місяць
+    var months = ['Січень', 'Лютий', 'Березень', 'Квітень', 'Травень'];
+    var incomeData = [15000, 18000, 20000, 22000, 25000];
+    var expensesData = [8000, 9000, 10000, 11000, 12000];
+
+    // Створення графіка доходів
+    var incomeChartCanvas = document.getElementById('incomeChart').getContext('2d');
+    var incomeChart = new Chart(incomeChartCanvas, {
+        type: 'line',
+        data: {
+            labels: months,
+            datasets: [{
+                label: 'Дохід за місяць',
+                data: incomeData,
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    // Створення графіка витрат
+    var transactionsChartCanvas = document.getElementById('transactionsChart').getContext('2d');
+    var transactionsChart = new Chart(transactionsChartCanvas, {
+        type: 'bar',
+        data: {
+            labels: months,
+            datasets: [{
+                label: 'Витрати за місяць',
+                data: expensesData,
+                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                borderColor: 'rgba(255, 99, 132, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    // Створення графіка доходів та витрат
+    var incomeExpenseChartCanvas = document.getElementById('incomeExpenseChart').getContext('2d');
+    var incomeExpenseChart = new Chart(incomeExpenseChartCanvas, {
+        type: 'line',
+        data: {
+            labels: months,
+            datasets: [{
+                label: 'Дохід за місяць',
+                data: incomeData,
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }, {
+                label: 'Витрати за місяць',
+                data: expensesData,
+                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                borderColor: 'rgba(255, 99, 132, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+    var paymentMethodsData = [300, 250, 150]; // Сума оплат картою, готівкою та переказом
+
+    // Створення графіка методів оплати
+    var paymentMethodsChartCanvas = document.getElementById('paymentMethodsChart').getContext('2d');
+    var paymentMethodsChart = new Chart(paymentMethodsChartCanvas, {
+        type: 'pie',
+        data: {
+            labels: ['Карта', 'Готівка', 'Переказ'],
+            datasets: [{
+                label: 'Методи оплати',
+                data: paymentMethodsData,
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)'
+                ],
+                borderWidth: 1
+            }]
+        }
+    });
+</script>
+</body>
+</html>

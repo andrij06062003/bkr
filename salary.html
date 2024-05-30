@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <title>Зарплата</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 250px;
+            background-color: #333;
+            color: #fff;
+            height: 100vh;
+            padding: 20px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            overflow-y: auto;
+        }
+
+        .sidebar h2 {
+            text-align: left;
+            color: #fff;
+        }
+
+        .sidebar a, .sidebar button {
+            color: #fff;
+            text-decoration: none;
+            padding: 10px 0;
+            width: 100%;
+            display: block;
+            margin: 5px 0;
+            background: none;
+            border: none;
+            text-align: left;
+            cursor: pointer;
+            outline: none;
+        }
+
+        .sidebar a:hover, .sidebar button:hover {
+            background-color: #575757;
+            border-radius: 5px;
+            padding-left: 10px;
+        }
+
+        .submenu {
+            display: none;
+            padding-left: 20px;
+        }
+
+        .submenu a {
+            padding: 5px 0;
+        }
+
+        .content {
+            flex-grow: 1;
+            padding: 20px;
+            box-sizing: border-box;
+            margin-left: 250px;
+        }
+
+        button {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            background-color: #6cee20;
+            color: #fffdfc;
+            cursor: pointer;
+            outline: none;
+            font-size: 14px;
+        }
+
+        button:hover {
+            background-color: #70a5df;
+        }
+        #salaryForm {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        #salaryForm label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        
+        #salaryForm input[type="text"],
+        #salaryForm input[type="number"] {
+            width: calc(100% - 20px);
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
+        
+        #salaryForm button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        
+        #salaryForm button:hover {
+            background-color: #45a049;
+        }
+        
+        /* Result Section */
+        #salaryResult {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        #salaryResult h3 {
+            margin-bottom: 15px;
+        }
+        
+        #salaryResult p {
+            margin: 5px 0;
+        }
+        #salaryContainer {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .salary-item {
+            background-color: #fff;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px; /* Збільшуємо відступ між записами */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease; /* Плавний перехід при наведенні */
+        }
+        
+        .salary-item:last-child {
+            margin-bottom: 0; /* Усуваємо зовнішній відступ у останнього елемента */
+        }
+        
+        .salary-item:hover {
+            transform: translateY(-3px); /* Зсуваємо трохи вгору при наведенні */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .salary-info {
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .salary-info p {
+            margin: 5px 0;
+        }
+        
+        .salary-name {
+            font-weight: bold;
+            font-size: 18px;
+            color: #333;
+        }
+        
+        .salary-position {
+            color: #666;
+        }
+        
+        .salary-hours {
+            color: #555;
+        }
+        
+        .salary-salary {
+            color: #27ae60;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<div class="sidebar">
+    <div>
+        <h2>Меню</h2>
+        <button onclick="toggleSubmenu('statisticsSubmenu')">Статистика</button>
+        <div id="statisticsSubmenu" class="submenu">
+            <a href="#" onclick="showSection('sales')">Продажі</a>
+            <a href="#" onclick="showSection('employees')">Працівники</a>
+            <a href="#" onclick="showSection('products')">Товари</a>
+        </div>
+        <button onclick="toggleSubmenu('inventorySubmenu')">Склад</button>
+        <div id="inventorySubmenu" class="submenu">
+            <a href="/leftovers.html" onclick="showSection('stock')">Залишки</a>
+            <a href="/supply.html" onclick="showSection('supply')">Постачання</a>
+            <a href="/rest.html" onclick="showSection('writeOff')">Списання</a>
+        </div>
+        <button onclick="toggleSubmenu('menuSubmenu')">Меню</button>
+        <div id="menuSubmenu" class="submenu">
+            <a href="/products.html" onclick="showSection('items')">Товари</a>
+            <a href="#" onclick="showSection('techCards')">Тех Карти</a>
+        </div>
+        <button onclick="toggleSubmenu('financesSubmenu')">Фінанси</button>
+        <div id="financesSubmenu" class="submenu">
+            <a href="/transaction.html" onclick="showSection('transactions')">Транзакції</a>
+            <a href="/salary.html" onclick="showSection('salary')">Зарплата</a>
+        </div>
+    </div>
+    <div class="logout-container">
+        <button class="logout-button" onclick="logout()">Вийти</button>
+    </div>
+</div>
+
+<div class="content">
+    <h2>Зарплата</h2>
+    <div id="salaryForm">
+        <label for="name">Ім'я:</label>
+        <input type="text" id="name" name="name"><br><br>
+        <label for="position">Посада:</label>
+        <input type="text" id="position" name="position"><br><br>
+        <label for="hours">Години:</label>
+        <input type="number" id="hours" name="hours" min="1"><br><br>
+        <label for="salary">Зарплата:</label>
+        <input type="number" id="salary" name="salary" min="0"><br><br>
+        <button onclick="calculateSalary()">Розрахувати</button>
+    </div>
+    <div id="salaryResult" style="display: none;">
+        <h3>Результат розрахунку:</h3>
+        <p id="resultName"></p>
+        <p id="resultPosition"></p>
+        <p id="resultHours"></p>
+        <p id="resultSalary"></p>
+    </div>
+
+    <div id="salaryContainer">
+        <!-- Сюди будуть додані зарплати з бази даних -->
+    </div>
+</div>
+
+<script>
+    function showSection(sectionId) {
+        var sections = document.getElementsByClassName('section');
+        for (var i = 0; i < sections.length; i++) {
+            sections[i].style.display = 'none';
+        }
+        document.getElementById(sectionId).style.display = 'block';
+    }
+
+    function toggleSubmenu(submenuId) {
+        var submenu = document.getElementById(submenuId);
+        if (submenu.style.display === 'none' || submenu.style.display === '') {
+            submenu.style.display = 'block';
+        } else {
+            submenu.style.display = 'none';
+        }
+    }
+
+    function logout() {
+        window.location.href = '/';
+    }
+
+    function calculateSalary() {
+        // Отримуємо дані форми
+        var formData = {
+            name: document.getElementById('name').value,
+            position: document.getElementById('position').value,
+            hours: document.getElementById('hours').value,
+            salary: document.getElementById('salary').value
+        };
+
+        // Відправляємо POST-запит на сервер
+        fetch('/add-salary', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formData)
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            // Обробка успішної відповіді
+            console.log('Success:', data);
+            displaySalaries(); // Відображення списку зарплат після додавання нової
+        })
+        .catch(error => {
+            // Обробка помилки
+            console.error('Error:', error);
+            alert('Failed to submit form. Please try again.');
+        });
+    }
+
+    function displaySalaries() {
+        // Отримуємо список зарплат з сервера
+        fetch('/salaries')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(salaries => {
+            // Обробка успішної відповіді
+            console.log('Salaries:', salaries);
+            var salaryContainer = document.getElementById('salaryContainer');
+            salaryContainer.innerHTML = ''; // Очищення попереднього вмісту
+            salaries.forEach(salary => {
+                var p = document.createElement('p');
+                p.textContent = 'Прізвище: ' + salary.name + ', Посада: ' + salary.position + ', Години: ' + salary.hours + ', Ставка: ' + salary.salary + ', Зарплата: ' + (salary.hours*salary.salary)+'UAH';
+                salaryContainer.appendChild(p);
+            });
+        })
+        .catch(error => {
+            // Обробка помилки
+            console.error('Error:', error);
+            alert('Failed to fetch salaries. Please try again.');
+        });
+    }
+    window.onload = function() {
+        displaySalaries();
+    };
+</script>
+
+</body>
+</html>

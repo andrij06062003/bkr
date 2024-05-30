@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <title>Нова сторінка</title>
+    <style>
+       /* Загальні стилі для body та html */
+body, html {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+
+/* Стилі для бокового меню */
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 250px;
+    background-color: #333;
+    color: #fff;
+    height: 100vh;
+    padding: 20px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    overflow-y: auto;
+}
+
+.sidebar h2 {
+    text-align: left;
+    color: #fff;
+}
+
+.sidebar a,
+.sidebar button {
+    color: #fff;
+    text-decoration: none;
+    padding: 10px 0;
+    width: 100%;
+    display: block;
+    margin: 5px 0;
+    background: none;
+    border: none;
+    text-align: left;
+    cursor: pointer;
+    outline: none;
+}
+
+.sidebar a:hover,
+.sidebar button:hover {
+    background-color: #575757;
+    border-radius: 5px;
+    padding-left: 10px;
+}
+
+.submenu {
+    display: none;
+    padding-left: 20px;
+}
+
+.submenu a {
+    padding: 5px 0;
+}
+
+.content {
+    margin-left: 250px;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.header {
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px;
+    text-align: center;
+}
+
+.logout-button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 3px;
+    background-color: #007bff;
+    color: #fff;
+    cursor: pointer;
+    outline: none;
+    text-align: left;
+}
+
+.logout-button:hover {
+    background-color: #0056b3;
+    border-radius: 5px;
+    padding-left: 10px;
+    color: #ffffff;
+}
+
+.logout-container {
+    margin-top: auto;
+}
+
+.add-button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 3px;
+    background-color: #007bff;
+    color: #fff;
+    cursor: pointer;
+    outline: none;
+    text-align: center;
+    margin-bottom: 20px;
+    display: inline-block;
+    transition: background-color 0.3s;
+}
+
+.add-button:hover {
+    background-color: #0056b3;
+}
+
+.product-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.product {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 15px;
+    width: calc(33.33% - 20px);
+    margin-bottom: 20px;
+}
+
+.product h3 {
+    margin-top: 0;
+}
+
+.product p {
+    margin-bottom: 0;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.table th,
+.table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+.table th {
+    background-color: #f2f2f2;
+    color: #333;
+}
+
+.table tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.table tr:hover {
+    background-color: #ddd;
+}
+
+/* Модальне вікно */
+.modal {
+    display: none; /* Приховане за замовчуванням */
+    position: fixed; /* Фіксоване положення, щоб залишатися на екрані */
+    z-index: 1; /* На передньому плані */
+    left: 0;
+    top: 0;
+    width: 100%; /* Повна ширина */
+    height: 100%; /* Повна висота */
+    overflow: auto; /* Додана прокрутка, якщо контент завеликий */
+    background-color: rgba(0, 0, 0, 0.4); /* Чорний колір фону з прозорістю */
+}
+
+/* Вміст модального вікна */
+.modal-content {
+    background-color: #fefefe;
+    margin: 10% auto; /* Центруємо по вертикалі та горизонталі */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%; /* 80% ширини від батьківського елемента */
+}
+
+/* Закрити кнопку (хрестик) */
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <div>
+            <h2>Меню</h2>
+            <button onclick="toggleSubmenu('statisticsSubmenu')">Статистика</button>
+            <div id="statisticsSubmenu" class="submenu">
+                <a href="#" onclick="showSection('sales')">Продажі</a>
+                <a href="#" onclick="showSection('employees')">Працівники</a>
+                <a href="#" onclick="showSection('products')">Товари</a>
+            </div>
+            <button onclick="toggleSubmenu('inventorySubmenu')">Склад</button>
+            <div id="inventorySubmenu" class="submenu">
+                <a href="/leftovers.html" onclick="showSection('stock')">Залишки</a>
+                <a href="/supply.html" onclick="showSection('supply')">Постачання</a>
+                <a href="/rest.html" onclick="showSection('writeOff')">Списання</a>
+            </div>
+            <button onclick="toggleSubmenu('menuSubmenu')">Меню</button>
+            <div id="menuSubmenu" class="submenu">
+                <a href="/products.html" onclick="showSection('items')">Товари</a>
+                <a href="#" onclick="showSection('techCards')">Тех Карти</a>
+            </div>
+            <button onclick="toggleSubmenu('financesSubmenu')">Фінанси</button>
+            <div id="financesSubmenu" class="submenu">
+                <a href="#" onclick="showSection('transactions')">Транзакції</a>
+                <a href="#" onclick="showSection('salary')">Зарплата</a>
+            </div>
+        </div>
+        <div class="logout-container">
+            <button class="logout-button" onclick="logout()">Вийти</button>
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="header">
+            <h1>Залишки</h1>
+        </div>
+        <div id="rest" class="section" style="display:none;">
+            <button class="add-button" onclick="openAddModal()">Додати</button>
+            <div class="product-container">
+                <table class="table">
+                    <!-- Залишаємо цей рядок пустим, він буде заповнений JavaScript-ом -->
+                    <tbody id="productList"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Модальне вікно -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeAddModal()">&times;</span>
+            <h2>Додати списання</h2>
+            <form id="addForm">
+                <label for="productName">Назва продукту:</label>
+                <input type="text" id="productName" name="productName" required><br><br>
+                <label for="category">Категорія:</label>
+                <input type="text" id="category" name="category" required><br><br>
+                <label for="quantity">Кількість:</label>
+                <input type="number" id="quantity" name="quantity" required><br><br>
+                <label for="date">Дата списання:</label>
+                <input type="date" id="date" name="date" required><br><br>
+                <button type="submit">Додати</button>
+            </form>
+        </div>
+    </div>
+<script>
+    function showSection(sectionId) {
+        var sections = document.getElementsByClassName('section');
+        for (var i = 0; i < sections.length; i++) {
+            sections[i].style.display = 'none';
+        }
+        document.getElementById(sectionId).style.display = 'block';
+    }
+
+    function toggleSubmenu(submenuId) {
+        var submenu = document.getElementById(submenuId);
+        if (submenu.style.display === 'none' || submenu.style.display === '') {
+            submenu.style.display = 'block';
+        } else {
+            submenu.style.display = 'none';
+        }
+    }
+
+    function logout() {
+        window.location.href = '/';
+    }
+    function openAddModal() {
+        document.getElementById("modal").style.display = "block";
+    }
+    
+    // Закриття модального вікна
+    function closeAddModal() {
+        document.getElementById("modal").style.display = "none";
+    }
+    
+    // Обробник події для додавання нового списання
+    document.getElementById("addForm").addEventListener("submit", function(event) {
+        event.preventDefault(); // Перешкоджаємо стандартній поведінці форми
+        var productName = document.getElementById("productName").value;
+        var category = document.getElementById("category").value;
+        var quantity = document.getElementById("quantity").value;
+        var date = document.getElementById("date").value;
+    
+        // Додавання нового рядка в таблицю
+        var table = document.getElementById("productList");
+        var row = table.insertRow(-1);
+        var cell1 = row.insertCell(0);
+        var cell2 = row.insertCell(1);
+        var cell3 = row.insertCell(2);
+        var cell4 = row.insertCell(3);
+        cell1.innerHTML = productName;
+        cell2.innerHTML = category;
+        cell3.innerHTML = quantity;
+        cell4.innerHTML = date;
+    
+        // Закриття модального вікна після додавання
+        closeAddModal();
+    });
+    
+    window.onload = function() {
+        showSection('rest');
+    };
+</script>
+
+</body>
+</html>
